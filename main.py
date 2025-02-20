@@ -148,3 +148,12 @@ functions = [
     }
 
     ]
+
+available_functions = {
+    "get_stock_price": get_stock_price,
+    "calculate_SMA": calculate_SMA,
+    "calculate_EMA": calculate_EMA,
+    "calculate_RSI": calculate_RSI,
+    "calculate_MACD": calculate_MACD,
+    "plot_stock_price": plot_stock_price
+}
