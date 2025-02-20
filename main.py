@@ -51,3 +51,100 @@ def plot_stock_price(ticker):
     plt.grid(True)
     plt.savefig("stock.png")
     plt.close()
+
+
+functions = [
+    {
+        "name": "get_stock_price",
+        "description": "Gets the latest stock price given the ticker symbol of a company",
+        "parameters": {
+            "type": "object",
+            "property": {
+                "ticker": {
+                    "type": "string",
+                    "description": "The stock ticker symbol for a company (For example AAPL for Apple)"
+                }
+            },
+            "required": ["ticker"]
+        }
+    },
+    {
+        "name": "calculate_SMA",
+        "description": "Calculates the Simple Moving Average (SMA) for a given stock ticker and time window",
+        "parameters": {
+            "type": "object",
+            "properties": {
+                "ticker": {
+                    "type": "string",
+                    "description": "The stock ticker symbol for a company (e.g., AAPL for Apple)"
+                },
+                "window": {
+                    "type": "integer",
+                    "description": "The time window in days for calculating the SMA (e.g., 50 for a 50-day SMA)"
+                }
+            },
+            "required": ["ticker", "window"]
+        }
+    },
+    {
+        "name": "calculate_EMA",
+        "description": "Calculates the Exponential Moving Average (EMA) for a given stock ticker and time window",
+        "parameters": {
+            "type": "object",
+            "properties": {
+                "ticker": {
+                    "type": "string",
+                    "description": "The stock ticker symbol for a company (e.g., AAPL for Apple)"
+                },
+                "window": {
+                    "type": "integer",
+                    "description": "The time window in days for calculating the EMA (e.g., 50 for a 50-day EMA)"
+                }
+            },
+            "required": ["ticker", "window"]
+        }
+    },
+    {
+        "name": "calculate_RSI",
+        "description": "Calculates the Relative Strength Index (RSI) for a given stock ticker",
+        "parameters": {
+            "type": "object",
+            "properties": {
+                "ticker": {
+                    "type": "string",
+                    "description": "The stock ticker symbol for a company (e.g., AAPL for Apple)"
+                }
+            },
+            "required": ["ticker"]
+        }
+    },
+    {
+        "name": "calculate_MACD",
+        "description": "Calculates the Moving Average Convergence Divergence (MACD) indicator for a given stock ticker",
+        "parameters": {
+            "type": "object",
+            "properties": {
+                "ticker": {
+                    "type": "string",
+                    "description": "The stock ticker symbol for a company (e.g., AAPL for Apple)"
+                }
+            },
+            "required": ["ticker"]
+        }
+    },
+    {
+        "name": "plot_stock_price",
+        "description": "Generates and saves a stock price chart for the given ticker symbol over the last year",
+        "parameters": {
+            "type": "object",
+            "properties": {
+                "ticker": {
+                    "type": "string",
+                    "description": "The stock ticker symbol for a company (e.g., AAPL for Apple)"
+                }
+            },
+            "required": ["ticker"]
+        }
+    }
+
+    ]
