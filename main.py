@@ -2,7 +2,7 @@
 import json
 import openai
 import pandas as pd 
-import matplotlib as plt 
+import matplotlib.pyplot as plt 
 import streamlit as st 
 import yfinance as yf 
 
@@ -46,8 +46,8 @@ def plot_stock_price(ticker):
     plt.figure(figsize=(10, 5))
     plt.plot(data.index, data.Close)
     plt.title(f"{ticker} Stock Price Over Last Year")
-    plt.x_label("Date")
-    plt.y_label("Stock Price ($)")
+    plt.xlabel("Date")
+    plt.ylabel("Stock Price ($)")
     plt.grid(True)
     plt.savefig("stock.png")
     plt.close()
@@ -59,7 +59,7 @@ functions = [
         "description": "Gets the latest stock price given the ticker symbol of a company",
         "parameters": {
             "type": "object",
-            "property": {
+            "properties": {
                 "ticker": {
                     "type": "string",
                     "description": "The stock ticker symbol for a company (For example AAPL for Apple)"
@@ -183,7 +183,7 @@ if user_input:
             elif function_name in ["calculate_SMA", "calculate_EMA"]:
                 arguments_dictionary = {"ticker": function_arguments.get("ticker"), "window": function_arguments.get("window")}
 
-            function_to_call = available_functions(function_name)
+            function_to_call = available_functions[function_name]
             function_response = function_to_call(**arguments_dictionary)
 
             if function_name == "plot_stock_price":
