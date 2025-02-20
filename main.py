@@ -10,46 +10,45 @@ with open("API_KEY.txt", "r") as f:
     openai.api_key = f.read().strip()
 
 
-def get_stock_price(ticker):
-    return str(yf.Ticker(ticker).history(period="1y").iloc[-1].Close)
+def fetch_stock_data(ticker):
+    return yf.Ticker(ticker).history(period="1y")
 
-def calculate_SMA(ticker, window):
-    data = yf.Ticker(ticker).history(period="1y").Close
-    return str(data.rolling(window=window).mean().iloc[-1])
+def get_stock_price(data):
+    return str(data.Close.iloc[-1])
 
-def calculate_EMA(ticker, window):
-    data = yf.Ticker(ticker).history(period="1y").Close
-    return str(data.ewm(span=window, adjust=False).mean().iloc[-1])
+def calculate_SMA(data, window):
+    return str(data.Close.rolling(window=window).mean().iloc[-1])
 
-def calculate_RSI(ticker):
-    data = yf.Ticker(ticker).history(period="1y").Close
-    delta = data.diff()
+def calculate_EMA(data, window):
+    """Calculates the Exponential Moving Average (EMA) for the given stock data and window period."""
+    return str(data.Close.ewm(span=window, adjust=False).mean().iloc[-1])
+
+def calculate_RSI(data):
+    """Calculates the Relative Strength Index (RSI) for the given stock data."""
+    delta = data.Close.diff()
     up = delta.clip(lower=0)
     down = -1 * delta.clip(upper=0)
     ema_up = up.ewm(com=14-1, adjust=False).mean()
     ema_down = down.ewm(com=14-1, adjust=False).mean()
-    rs = ema_up /ema_down
-    return str(100 - (100 / (1+rs)).iloc[-1])
+    rs = ema_up / ema_down
+    return str(100 - (100 / (1 + rs)).iloc[-1])
 
-def calculate_MACD(ticker):
-    data = yf.Ticker(ticker).history(period="1y").Close
-    short_EMA = data.ewm(span=12, adjust=False).mean()
-    long_EMA = data.ewm(span=26, adjust=False).mean()
-
+def calculate_MACD(data):
+    """Calculates the Moving Average Convergence Divergence (MACD) for the given stock data."""
+    short_EMA = data.Close.ewm(span=12, adjust=False).mean()
+    long_EMA = data.Close.ewm(span=26, adjust=False).mean()
     MACD = short_EMA - long_EMA
     signal = MACD.ewm(span=9, adjust=False).mean()
     MACD_histogram = MACD - signal
 
     return json.dumps({
-    "MACD": MACD.iloc[-1],
-    "Signal": signal.iloc[-1],
-    "Histogram": MACD_histogram.iloc[-1]
-})
+        "MACD": MACD.iloc[-1],
+        "Signal": signal.iloc[-1],
+        "Histogram": MACD_histogram.iloc[-1]
+    })
 
-
-
-def plot_stock_price(ticker):
-    data = yf.Ticker(ticker).history(period="1y")
+def plot_stock_price(data, ticker):
+    """Plots and saves the stock price chart for the given stock data."""
     plt.figure(figsize=(10, 5))
     plt.plot(data.index, data.Close)
     plt.title(f"{ticker} Stock Price Over Last Year")
