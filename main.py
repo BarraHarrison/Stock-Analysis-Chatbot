@@ -157,3 +157,55 @@ available_functions = {
     "calculate_MACD": calculate_MACD,
     "plot_stock_price": plot_stock_price
 }
+
+if "messages" not in st.session_state:
+    st.session_state["messages"] = []
+
+st.title("Stock Analysis Assistant")
+
+user_input = st.text_input("Your input:")
+if user_input:
+    try:
+        st.session_state["messages"].append({"role": "user", "content": f"{user_input}"})
+        response = openai.ChatCompletion.create(
+            model = "GPT-4o",
+            messages = st.session_state["messages"],
+            functions = functions,
+            function_call = "auto"
+        )
+
+        response_message = response["choices"][0]["message"]
+        if response_message.get("function_call"):
+            function_name = response_message["function_call"]["name"]
+            function_arguments = json.loads(response_message["function_call"]["arguments"])
+            if function_name in ["get_stock_price", "calculate_RSI", "calculate_MACD", "plot_stock_price"]:
+                arguments_dictionary = {"ticker": function_arguments.get("ticker")}
+            elif function_name in ["calculate_SMA", "calculate_EMA"]:
+                arguments_dictionary = {"ticker": function_arguments.get("ticker"), "window": function_arguments.get("window")}
+
+            function_to_call = available_functions(function_name)
+            function_response = function_to_call(**arguments_dictionary)
+
+            if function_name == "plot_stock_price":
+                st.image("stock.png")
+            else:
+                st.session_state["messages"].append(response_message)
+                st.session_state["messages"].append(
+                    {
+                        "role": "function",
+                        "name": function_name,
+                        "content": function_response
+                    }
+                )
+                second_response = openai.ChatCompletion.create(
+                    model = "GPT-4o",
+                    messages = st.session_state["messages"]
+                )
+                st.text(second_response["choices"][0]["message"]["content"])
+                st.session_state["messages"].append({"role": "assistant", "content": second_response["choices"][0]["message"]["content"]})
+        
+        else:
+            st.text(response_message["content"])
+            st.session_state["messages"].append({"role": "assistant", "content": response_message["content"]})
+    except:
+        st.text("Try again")
