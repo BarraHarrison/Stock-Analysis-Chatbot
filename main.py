@@ -38,7 +38,12 @@ def calculate_MACD(ticker):
     signal = MACD.ewm(span=9, adjust=False).mean()
     MACD_histogram = MACD - signal
 
-    return f"{MACD[-1], {signal[-1], MACD_histogram[-1]}}"
+    return json.dumps({
+    "MACD": MACD.iloc[-1],
+    "Signal": signal.iloc[-1],
+    "Histogram": MACD_histogram.iloc[-1]
+})
+
 
 
 def plot_stock_price(ticker):
