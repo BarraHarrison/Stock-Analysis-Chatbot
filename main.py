@@ -212,5 +212,5 @@ if user_input:
         else:
             st.text(response_message["content"])
             st.session_state["messages"].append({"role": "assistant", "content": response_message["content"]})
-    except:
-        st.text("Try again")
+    except Exception as e:
+        st.text(f"An error occurred: {e}")
