@@ -6,7 +6,8 @@ import streamlit as st
 import yfinance as yf 
 from gpt4all import GPT4All
 
-model = GPT4All("mistral-7b-instruct")
+model_name = "mistral-7b-openorca"
+model = GPT4All(model_name, model_path="~/.gpt4all/")
 
 
 def fetch_stock_data(ticker):
