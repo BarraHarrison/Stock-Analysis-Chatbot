@@ -204,7 +204,7 @@ if user_input:
                         "content": function_response
                     }
                 )
-                second_response = openai.ChatCompletion.create(
+                second_response = client.chat.completions.create(
                     model = "GPT-4o",
                     messages = st.session_state["messages"]
                 )
