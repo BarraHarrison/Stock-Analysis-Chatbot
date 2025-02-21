@@ -183,8 +183,8 @@ if user_input:
 
         response_message = response.choices[0].message
         if response_message.get("function_call"):
-            function_name = response_message["function_call"]["name"]
-            function_arguments = json.loads(response_message["function_call"]["arguments"])
+            function_name = response_message.tool_calls[0].function.name
+            function_arguments = json.loads(response_message.tool_calls[0].function.arguments)
             if function_name in ["get_stock_price", "calculate_RSI", "calculate_MACD", "plot_stock_price"]:
                 arguments_dictionary = {"ticker": function_arguments.get("ticker")}
             elif function_name in ["calculate_SMA", "calculate_EMA"]:
