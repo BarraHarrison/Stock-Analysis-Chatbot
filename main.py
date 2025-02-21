@@ -181,7 +181,7 @@ if user_input:
             tool_choice="auto"
         )
 
-        response_message = response["choices"][0]["message"]
+        response_message = response.choices[0].message
         if response_message.get("function_call"):
             function_name = response_message["function_call"]["name"]
             function_arguments = json.loads(response_message["function_call"]["arguments"])
