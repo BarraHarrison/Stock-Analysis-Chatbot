@@ -1,13 +1,14 @@
 # Stock Analysis Chatbot powered by ChatGPT
 import json
-import openai
 import pandas as pd 
 import matplotlib.pyplot as plt 
 import streamlit as st 
 import yfinance as yf 
+from openai import OpenAI
 
 with open("API_KEY.txt", "r") as f:
-    openai.api_key = f.read().strip()
+    api_key = f.read().strip()
+client = OpenAI(api_key=api_key)
 
 
 def fetch_stock_data(ticker):
