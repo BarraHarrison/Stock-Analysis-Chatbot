@@ -174,11 +174,11 @@ user_input = st.text_input("Your input:")
 if user_input:
     try:
         st.session_state["messages"].append({"role": "user", "content": f"{user_input}"})
-        response = openai.ChatCompletion.create(
-            model = "GPT-4o",
+        response = client.chat.completions.create(
+            model = "gpt-4o",
             messages = st.session_state["messages"],
-            functions = functions,
-            function_call = "auto"
+            tools=functions,
+            tool_choice="auto"
         )
 
         response_message = response["choices"][0]["message"]
