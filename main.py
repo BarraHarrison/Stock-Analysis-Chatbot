@@ -6,9 +6,7 @@ import streamlit as st
 import yfinance as yf 
 from gpt4all import GPT4All
 
-with open("API_KEY.txt", "r") as f:
-    api_key = f.read().strip()
-client = OpenAI(api_key=api_key)
+model = GPT4All("mistral-7b-instruct")
 
 
 def fetch_stock_data(ticker):
@@ -174,14 +172,12 @@ user_input = st.text_input("Your input:")
 if user_input:
     try:
         st.session_state["messages"].append({"role": "user", "content": f"{user_input}"})
-        response = client.chat.completions.create(
-            model = GPT4All("mistral-7b-instruct"),
-            messages = st.session_state["messages"],
-            tools=functions,
-            tool_choice="auto"
+        response = model.chat_completion(
+        messages=st.session_state["messages"]
         )
 
-        response_message = response.choices[0].message
+
+        response_message = response["choices"][0]["message"]
         if response_message.get("function_call"):
             function_name = response_message.tool_calls[0].function.name
             function_arguments = json.loads(response_message.tool_calls[0].function.arguments)
@@ -204,7 +200,7 @@ if user_input:
                         "content": function_response
                     }
                 )
-                second_response = client.chat.completions.create(
+                second_response = model.chat_completion(
                     model = GPT4All("mistral-7b-instruct"),
                     messages = st.session_state["messages"]
                 )
