@@ -4,7 +4,7 @@ import pandas as pd
 import matplotlib.pyplot as plt 
 import streamlit as st 
 import yfinance as yf 
-from openai import OpenAI
+from gpt4all import GPT4All
 
 with open("API_KEY.txt", "r") as f:
     api_key = f.read().strip()
@@ -175,7 +175,7 @@ if user_input:
     try:
         st.session_state["messages"].append({"role": "user", "content": f"{user_input}"})
         response = client.chat.completions.create(
-            model = "gpt-4o",
+            model = GPT4All("mistral-7b-instruct"),
             messages = st.session_state["messages"],
             tools=functions,
             tool_choice="auto"
@@ -205,7 +205,7 @@ if user_input:
                     }
                 )
                 second_response = client.chat.completions.create(
-                    model = "GPT-4o",
+                    model = GPT4All("mistral-7b-instruct"),
                     messages = st.session_state["messages"]
                 )
                 st.text(second_response["choices"][0]["message"]["content"])
