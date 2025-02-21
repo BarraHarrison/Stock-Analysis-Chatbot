@@ -177,10 +177,11 @@ if user_input:
         )
 
 
-        response_message = response["choices"][0]["message"]
+        response_message = response["choices"][0]["message"]["content"]
         if response_message.get("function_call"):
-            function_name = response_message.tool_calls[0].function.name
-            function_arguments = json.loads(response_message.tool_calls[0].function.arguments)
+            if "function_call" in response_message:
+                function_name = response_message["function_call"]["name"]
+                function_arguments = json.loads(response_message["function_call"]["arguments"])
             if function_name in ["get_stock_price", "calculate_RSI", "calculate_MACD", "plot_stock_price"]:
                 arguments_dictionary = {"ticker": function_arguments.get("ticker")}
             elif function_name in ["calculate_SMA", "calculate_EMA"]:
@@ -201,7 +202,6 @@ if user_input:
                     }
                 )
                 second_response = model.chat_completion(
-                    model = GPT4All("mistral-7b-instruct"),
                     messages = st.session_state["messages"]
                 )
                 st.text(second_response["choices"][0]["message"]["content"])
@@ -211,4 +211,4 @@ if user_input:
             st.text(response_message["content"])
             st.session_state["messages"].append({"role": "assistant", "content": response_message["content"]})
     except Exception as e:
-        st.text(f"An error occurred: {e}")
+        st.error(f"An error occurred: {str(e)}")
